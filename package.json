@@ -1,0 +1,31 @@
+{
+  "name": "node_demo",
+  "version": "1.0.0",
+  "description": "node_demo",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "start_article": "ts-node src/文章生成器/index.ts",
+    "start_module": "ts-node --require tsconfig-paths/register src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/command-line-args": "^5.2.0",
+    "@types/command-line-usage": "^5.0.2",
+    "@types/mime": "^3.0.1",
+    "@types/node": "^20.3.2",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "dependencies": {
+    "command-line-args": "^5.2.1",
+    "command-line-usage": "^7.0.1",
+    "mime": "^3.0.0",
+    "moment": "2.24.0"
+  }
+}
