@@ -19,7 +19,7 @@ function toHTML(data: typeof responseData) {
 
 const server = http.createServer((req, res) => {
     const { pathname } = url.parse(`http://${req.headers.host}${req.url}`);
-    console.log(`http://${req.headers.host}${req.url}`);
+    console.log(`http://${req.headers.host}${req.url}-------${pathname}`);
     const accept = req.headers.accept; // 获取Accept信息
     console.log(accept);
     if (pathname === '/') {
