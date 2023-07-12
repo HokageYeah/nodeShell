@@ -25,6 +25,7 @@
   "dependencies": {
     "command-line-args": "^5.2.1",
     "command-line-usage": "^7.0.1",
+    "handlebars": "^4.7.7",
     "mime": "^3.0.0",
     "moment": "2.24.0"
   }

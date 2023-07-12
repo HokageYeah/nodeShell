@@ -12,6 +12,9 @@ function check(rule: string, pathname: string) {
   解析规则，比如：/test/:course/:lecture
   paraMatched = ['/test/:course/:lecture', ':course', ':lecture']
   */
+  //  由于操作系统不同造成的,在windows操作系统中擅长用\,而在linux或mac操作系统中擅长用/,
+  // 可能由于作者用的可能是mac电脑写的demo,因此windos用户需要在此处修改为: var rule = rule.replace(/\\/g, "\/"); 
+  var rule = rule.replace(/\\/g, "\/"); 
   const paraMatched: any = rule.match(/:[^/]+/g);
   const ruleExp = new RegExp(`^${rule.replace(/:[^/]+/g, "([^/]+)")}$`);
 
