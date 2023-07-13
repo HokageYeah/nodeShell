@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup",
     "start": "ts-node src/index.ts",
     "start_article": "ts-node src/文章生成器/index.ts",
     "start_module": "ts-node --require tsconfig-paths/register src/index.ts"
@@ -18,9 +19,13 @@
   "devDependencies": {
     "@types/command-line-args": "^5.2.0",
     "@types/command-line-usage": "^5.0.2",
+    "@types/copyfiles": "^2.4.1",
     "@types/mime": "^3.0.1",
     "@types/node": "^20.3.2",
-    "tsconfig-paths": "^4.2.0"
+    "copyfiles": "^2.4.1",
+    "tsconfig-paths": "^4.2.0",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "command-line-args": "^5.2.1",
