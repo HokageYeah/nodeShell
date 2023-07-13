@@ -27,6 +27,8 @@
     "command-line-usage": "^7.0.1",
     "handlebars": "^4.7.7",
     "mime": "^3.0.0",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.6"
   }
 }
