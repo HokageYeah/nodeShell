@@ -8,8 +8,9 @@ import url from "node:url";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { addTask, getList } from "./model/todolist.js";
-import zlib from 'node:zlib'
+import zlib from "node:zlib";
 import mime from "mime";
+import { getCookie } from "./aspect/cookie.js";
 
 const app = new httpServer();
 const router = new Router();
@@ -24,6 +25,34 @@ const getFile = (pahtStr: string) => {
 //
 const dbFile = getFile("./database/todolist.db"); // todolist.db是sqlite数据库文件
 let db: any = null;
+
+// 设置cookie的拦截切面
+app.use(getCookie);
+const users: any = {};
+app.use(
+  router.get("/", async ({ route, res, cookies }, next) => {
+    res.setHeader("Content-Type", "text/html;charset=utf-8");
+    const mycookie = cookies.yeahcookie;
+    console.log("mycookie", mycookie);
+    if (mycookie) {
+      console.log("mycookie---1", users);
+      users[mycookie] = users[mycookie] || 1;
+      console.log("mycookie---2", users);
+      users[mycookie]++;
+      console.log("mycookie--3", users);
+      res.body = `<h1>欢迎回来${users[mycookie]}</h1>`;
+    } else {
+      res.setHeader(
+        "Set-Cookie",
+        `yeahcookie=${Math.random().toString(36).slice(2)}`
+      );
+      users[mycookie] = 1;
+      console.log("users[mycookie]", users);
+      res.body = "<h1>你好!新用户</h1>";
+    }
+    await next();
+  })
+);
 
 // 第一个拦截切面是提供 log，这样我们在服务器的控制台上就能知道用户访问了哪个 URL。
 app.use(async (ctx: any, next: () => void) => {
@@ -57,16 +86,18 @@ app.use(
 /*
 add 添加数据到数据库
 */
-app.use(router.post('/add', async ({ database, params, res }, next) => {
-  res.setHeader('Content-Type', 'application/json');
-  // 先固定死userid
-  const userInfo = {
-    id: 11
-  }
-  const result = await addTask(database, userInfo, params); // 获取任务数据
-  res.body = result;
-  await next();
-}))
+app.use(
+  router.post("/add", async ({ database, params, res }, next) => {
+    res.setHeader("Content-Type", "application/json");
+    // 先固定死userid
+    const userInfo = {
+      id: 11,
+    };
+    const result = await addTask(database, userInfo, params); // 获取任务数据
+    res.body = result;
+    await next();
+  })
+);
 
 /*
 如果路径不是/list, 则返回'<h1>Not Found</h1>'文本
@@ -79,79 +110,79 @@ app.use(router.post('/add', async ({ database, params, res }, next) => {
 //     await next();
 //   })
 // );
-app.use(router.get('.*', async ({ req, res }, next) => {
-  // let filePath = path.resolve(__dirname, path.join('../www', url.fileURLToPath(`file:///${req.url}`)));
-  console.log(`./www/${req.url}`);
+app.use(
+  router.get(".*", async ({ req, res }, next) => {
+    // let filePath = path.resolve(__dirname, path.join('../www', url.fileURLToPath(`file:///${req.url}`)));
+    console.log(`./www/${req.url}`);
 
-  let filePath = getFile(`./www/${req.url}`)
-  if (fs.existsSync(filePath)) {
-    const stats = fs.statSync(filePath);
-    if (stats.isDirectory()) {
-      filePath = path.join(filePath, 'index.html');
-    }
+    let filePath = getFile(`./www/${req.url}`);
     if (fs.existsSync(filePath)) {
-      const { ext } = path.parse(filePath);
       const stats = fs.statSync(filePath);
-      const timeStamp = req.headers['if-modified-since'];
-      res.statusCode = 200;
-      if (timeStamp && Number(timeStamp) === stats.mtimeMs) {
-        res.statusCode = 304;
+      if (stats.isDirectory()) {
+        filePath = path.join(filePath, "index.html");
       }
-      const mimeType = mime.getType(ext);
-      res.setHeader('Content-Type', mimeType);
-      res.setHeader('Cache-Control', 'max-age=86400');
-      res.setHeader('Last-Modified', stats.mtimeMs);
-      const acceptEncoding = req.headers['accept-encoding'];
-      const compress = acceptEncoding && /^(text|application)\//.test(<string>mimeType);
-      let compressionEncoding;
-      if (compress) {
-        acceptEncoding.split(/\s*,\s*/).some((encoding: string) => {
-          if (encoding === 'gzip') {
-            res.setHeader('Content-Encoding', 'gzip');
-            compressionEncoding = encoding;
-            return true;
-          }
-          if (encoding === 'deflate') {
-            res.setHeader('Content-Encoding', 'deflate');
-            compressionEncoding = encoding;
-            return true;
-          }
-          if (encoding === 'br') {
-            res.setHeader('Content-Encoding', 'br');
-            compressionEncoding = encoding;
-            return true;
-          }
-          return false;
-        });
-      }
-      if (res.statusCode === 200) {
-        const fileStream = fs.createReadStream(filePath);
-        if (compress && compressionEncoding) {
-          let comp;
-          if (compressionEncoding === 'gzip') {
-            comp = zlib.createGzip();
-          } else if (compressionEncoding === 'deflate') {
-            comp = zlib.createDeflate();
+      if (fs.existsSync(filePath)) {
+        const { ext } = path.parse(filePath);
+        const stats = fs.statSync(filePath);
+        const timeStamp = req.headers["if-modified-since"];
+        res.statusCode = 200;
+        if (timeStamp && Number(timeStamp) === stats.mtimeMs) {
+          res.statusCode = 304;
+        }
+        const mimeType = mime.getType(ext);
+        res.setHeader("Content-Type", mimeType);
+        res.setHeader("Cache-Control", "max-age=86400");
+        res.setHeader("Last-Modified", stats.mtimeMs);
+        const acceptEncoding = req.headers["accept-encoding"];
+        const compress =
+          acceptEncoding && /^(text|application)\//.test(<string>mimeType);
+        let compressionEncoding;
+        if (compress) {
+          acceptEncoding.split(/\s*,\s*/).some((encoding: string) => {
+            if (encoding === "gzip") {
+              res.setHeader("Content-Encoding", "gzip");
+              compressionEncoding = encoding;
+              return true;
+            }
+            if (encoding === "deflate") {
+              res.setHeader("Content-Encoding", "deflate");
+              compressionEncoding = encoding;
+              return true;
+            }
+            if (encoding === "br") {
+              res.setHeader("Content-Encoding", "br");
+              compressionEncoding = encoding;
+              return true;
+            }
+            return false;
+          });
+        }
+        if (res.statusCode === 200) {
+          const fileStream = fs.createReadStream(filePath);
+          if (compress && compressionEncoding) {
+            let comp;
+            if (compressionEncoding === "gzip") {
+              comp = zlib.createGzip();
+            } else if (compressionEncoding === "deflate") {
+              comp = zlib.createDeflate();
+            } else {
+              comp = zlib.createBrotliCompress();
+            }
+            res.body = fileStream.pipe(comp);
           } else {
-            comp = zlib.createBrotliCompress();
+            res.body = fileStream;
           }
-          res.body = fileStream.pipe(comp);
-        } else {
-          res.body = fileStream;
         }
       }
+    } else {
+      res.setHeader("Content-Type", "text/html");
+      res.body = "<h1>Not Found</h1>";
+      res.statusCode = 404;
     }
-  } else {
-    res.setHeader('Content-Type', 'text/html');
-    res.body = '<h1>Not Found</h1>';
-    res.statusCode = 404;
-  }
 
-  await next();
-}));
-
-
-
+    await next();
+  })
+);
 
 app.listen({
   port: 9090,
