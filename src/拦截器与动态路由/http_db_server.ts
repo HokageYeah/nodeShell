@@ -32,7 +32,7 @@ const users: any = {};
 app.use(
   router.get("/", async ({ route, res, cookies }, next) => {
     res.setHeader("Content-Type", "text/html;charset=utf-8");
-    const mycookie = cookies.yeahcookie;
+    let mycookie = cookies.yeahcookie;
     console.log("mycookie", mycookie);
     if (mycookie) {
       console.log("mycookie---1", users);
@@ -42,14 +42,13 @@ app.use(
       console.log("mycookie--3", users);
       res.body = `<h1>欢迎回来${users[mycookie]}</h1>`;
     } else {
-      res.setHeader(
-        "Set-Cookie",
-        `yeahcookie=${Math.random().toString(36).slice(2)}`
-      );
+      mycookie = Math.random().toString(36).slice(2);
       users[mycookie] = 1;
       console.log("users[mycookie]", users);
       res.body = "<h1>你好!新用户</h1>";
     }
+    // Max-Age=86400 添加过期时间
+    res.setHeader("Set-Cookie", `yeahcookie=${mycookie};Max-Age=86400`);
     await next();
   })
 );
