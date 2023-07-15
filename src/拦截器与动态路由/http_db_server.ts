@@ -11,6 +11,7 @@ import { addTask, getList } from "./model/todolist.js";
 import zlib from "node:zlib";
 import mime from "mime";
 import { getCookie } from "./aspect/cookie.js";
+import { login } from "./model/user.js";
 
 const app = new httpServer();
 const router = new Router();
@@ -29,6 +30,17 @@ let db: any = null;
 // 设置cookie的拦截切面
 app.use(getCookie);
 const users: any = {};
+app.use(async ({ cookies, res }: any, next: any) => {
+  let id = cookies.yeahcookie;
+  if (!id) {
+    id = Math.random().toString(36).slice(2);
+  }
+  res.setHeader(
+    "Set-Cookie",
+    `yeahcookie=${id}; Path=/; Max-Age=${7 * 86400}`
+  ); // 设置cookie的有效时长一周
+  await next();
+});
 app.use(
   router.get("/", async ({ route, res, cookies }, next) => {
     res.setHeader("Content-Type", "text/html;charset=utf-8");
@@ -79,6 +91,24 @@ app.use(
     console.log("list----", result);
     res.body = { data: result };
     await next();
+  })
+);
+
+app.use(
+  router.post("/login", async (ctx, next) => {
+    const { database, params, res } = ctx;
+    res.setHeader("Content-Type", "application/json");
+    const result = await login(database, ctx, params);
+    res.statusCode = 302;
+    if (!result) {
+      // 登录失败，跳转到login继续登录
+      res.setHeader("Location", "/login.html");
+    } else {
+      res.setHeader("Location", "/"); // 成功，跳转到 index
+    }
+    await next();
+    // res.body = result || { err: "invalid user" };
+    // await next();
   })
 );
 
