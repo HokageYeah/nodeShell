@@ -12,9 +12,11 @@ import zlib from "node:zlib";
 import mime from "mime";
 import { getCookie } from "./aspect/cookie.js";
 import { login } from "./model/user.js";
-
-const app = new httpServer();
+import * as process from 'node:process';
+import { parentPort } from 'node:worker_threads'
+const app: any = new httpServer({ instances: 0 });
 const router = new Router();
+
 
 // 路径
 const getFile = (pahtStr: string) => {
@@ -26,6 +28,26 @@ const getFile = (pahtStr: string) => {
 //
 const dbFile = getFile("./database/todolist.db"); // todolist.db是sqlite数据库文件
 let db: any = null;
+
+app.use(async (ctx: any, next: any) => {
+  console.log(`visit ${ctx.req.url} through worker: ${app.worker.process.pid}`);
+  await next();
+});
+
+// 统计访问次数
+app.use(async (ctx: any, next: any) => {
+  if (process?.send) {
+    process.send('count');
+  }
+  await next();
+});
+
+// let count = 0;
+// parentPort?.on('message', (msg) => { // 处理由worker.send发来的消息
+//   if (msg === 'count') { // 如果是count事件，则将count加一
+//     console.log('new_visit count: %d', ++count);
+//   }
+// });
 
 // 设置cookie的拦截切面
 app.use(getCookie);
