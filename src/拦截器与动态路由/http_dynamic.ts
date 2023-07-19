@@ -9,6 +9,11 @@ import url from "node:url";
 const app = new httpServer();
 const router = new Router();
 
+/**
+ * 这是一个注释
+ */
+
+/** 我是一个注释 */
 // 路径
 const getFile = (pahtStr: string) => {
   const _dirname = path.dirname(url.fileURLToPath(import.meta.url))

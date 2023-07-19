@@ -13,7 +13,8 @@
     "start_article": "ts-node src/文章生成器/index.ts",
     "start_module": "ts-node --require tsconfig-paths/register src/index.ts",
     "webdev": "webpack-dev-server",
-    "webbuild": "webpack"
+    "webbuild": "webpack",
+    "webtsbuild": "webpack --config ./webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "@types/copyfiles": "^2.4.1",
     "@types/mime": "^3.0.1",
     "@types/node": "^20.3.2",
+    "clean-webpack-plugin": "^4.0.0",
     "copyfiles": "^2.4.1",
     "css-loader": "^6.8.1",
     "ts-loader": "^9.4.4",

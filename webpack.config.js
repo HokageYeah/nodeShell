@@ -1,5 +1,8 @@
 const path = require("path");
 const fs = require("fs");
+const MyWebPackPlugin = require('./plugins/myWebPackPlugin')
+// //打包 的时候清空dist
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 // 获取所有入口文件
 function getEntryPoints() {
@@ -52,4 +55,8 @@ module.exports = {
       },
     ],
   },
+  plugins:[
+    new CleanWebpackPlugin(), //打包清空dist
+    new MyWebPackPlugin(),
+  ]
 };
