@@ -1,7 +1,7 @@
-import httpServer from "./httpServer.js";
-import Router from "./router_middleware.js";
-import { getCoronavirusByDate, getCoronavirusKeyIndex } from './mock.js'
-import param from "./param.js";
+import httpServer from "./httpServer";
+import Router from "./router_middleware";
+import { getCoronavirusByDate, getCoronavirusKeyIndex } from './mock'
+import param from "./param";
 import fs from 'node:fs';
 import handlebars from "handlebars"
 import path from "node:path";

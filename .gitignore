@@ -1,4 +1,6 @@
 node_modules
 dist
 /dist
+dist_tsc
+/dist_tsc
 package-lock.json

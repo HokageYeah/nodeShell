@@ -1,5 +1,5 @@
 import http from "node:http";
-import Interceptor from "./Interceptor.js";
+import Interceptor from "./Interceptor";
 
 export default class {
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;

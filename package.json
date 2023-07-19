@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "node_demo",
   "main": "index.js",
-  "type": "module",
   "directories": {
     "test": "test"
   },
@@ -12,7 +11,9 @@
     "build": "tsup",
     "start": "ts-node src/index.ts",
     "start_article": "ts-node src/文章生成器/index.ts",
-    "start_module": "ts-node --require tsconfig-paths/register src/index.ts"
+    "start_module": "ts-node --require tsconfig-paths/register src/index.ts",
+    "webdev": "webpack-dev-server",
+    "webbuild": "webpack"
   },
   "author": "",
   "license": "ISC",
@@ -23,9 +24,13 @@
     "@types/mime": "^3.0.1",
     "@types/node": "^20.3.2",
     "copyfiles": "^2.4.1",
+    "css-loader": "^6.8.1",
+    "ts-loader": "^9.4.4",
     "tsconfig-paths": "^4.2.0",
     "tsup": "^7.1.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "command-line-args": "^5.2.1",
