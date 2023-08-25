@@ -1,5 +1,5 @@
 import http from "node:http";
-import Interceptor from "./Interceptor";
+import Interceptor from "./Interceptor.js";
 import cluster from 'node:cluster';
 import os from 'node:os';
 

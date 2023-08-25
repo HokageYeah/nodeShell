@@ -106,5 +106,9 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*","src/**/*.ts","src/**/*.json"]
+  "include": ["src/**/*","src/**/*.ts","src/**/*.json"],
+  // ts-node 默认将文件视为 CommonJS ，需要显式声明为 ES Module 。（个人理解）
+  "ts-node": {
+       "esm": true
+  }
 }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "node_demo",
   "main": "index.js",
+  "type": "module",
   "directories": {
     "test": "test"
   },
@@ -11,6 +12,8 @@
     "build": "tsup",
     "start": "ts-node src/index.ts",
     "start_article": "ts-node src/文章生成器/index.ts",
+    "start_dynamic": "ts-node src/拦截器与动态路由/http_dynamic.ts",
+    "start_db": "ts-node src/拦截器与动态路由/http_db_server.ts",
     "start_module": "ts-node --require tsconfig-paths/register src/index.ts",
     "webdev": "webpack-dev-server",
     "webbuild": "webpack",

@@ -167,6 +167,7 @@ app.use(
     console.log(`./www/${req.url}`);
 
     let filePath = getFile(`./www/${req.url}`);
+    console.log(`./filePath--/${filePath}`);
     if (fs.existsSync(filePath)) {
       const stats = fs.statSync(filePath);
       if (stats.isDirectory()) {
